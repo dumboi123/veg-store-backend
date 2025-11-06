@@ -58,7 +58,7 @@ func (localizer *Localizer) Localize(lang, msgID string, params ...map[string]in
 	specificLocalizer := i18n.NewLocalizer(localizer.Bundle, lang)
 
 	/*
-		Create a map for template data if provided Example template data:
+		Create a map for template repository if provided Example template repository:
 		params := map[string]interface{}{
 			"Name": "John",
 			"Age": "30",
@@ -67,15 +67,39 @@ func (localizer *Localizer) Localize(lang, msgID string, params ...map[string]in
 
 	// Get TemplateData if existed
 	var templateData map[string]interface{}
+	var pluralCount interface{}
+
 	if len(params) > 0 {
 		templateData = params[0]
+
+		// Check if "count" key exists and is numeric
+		if val, ok := templateData["count"]; ok {
+			switch v := val.(type) {
+			case int:
+				pluralCount = v
+			case int32:
+				pluralCount = int(v)
+			case int64:
+				pluralCount = int(v)
+			case float64:
+				pluralCount = int(v)
+			}
+		}
+	}
+
+	// Build localize config
+	config := &i18n.LocalizeConfig{
+		MessageID:    msgID,
+		TemplateData: templateData,
+	}
+
+	// If pluralCount > 1, set PluralCount to trigger plural form
+	if count, ok := pluralCount.(int); ok && count > 1 {
+		config.PluralCount = count
 	}
 
 	// Localize message
-	msg, err := specificLocalizer.Localize(&i18n.LocalizeConfig{
-		MessageID:    msgID,
-		TemplateData: templateData,
-	})
+	msg, err := specificLocalizer.Localize(config)
 	if err != nil {
 		Logger.Warn("Failed to localize message",
 			zap.String("lang", lang),

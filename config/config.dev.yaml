@@ -1,12 +1,24 @@
 server:
   port: 8080
   api_prefix: /api/
-  api_version: v2
+  api_version: v1
+
+jwt:
+  expected_issuer: "https://veg-store.com"
+  expected_audiences: [ "web", "mobile" ]
+  access_duration: 15m
+  refresh_duration: 7d
+  private_key_path: ${PRIVATE_KEY_PATH:private.pem}
+  public_key_path: ${PUBLIC_KEY_PATH:public.pem}
 
 cors:
-  allowed_origins: "*"
-  allowed_methods: "GET, POST, PUT, DELETE, OPTIONS"
-  allowed_headers: "Content-Type, Authorization"
+  allow_origins: [ "*" ]
+  allow_methods: [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ]
+  allow_headers: [ "Content-Type", "Authorization" ]
+  allow_credentials: true
+
+swagger:
+  host: ${SWAGGER_HOST:localhost:8080}
 
 database:
   host: postgres

@@ -25,7 +25,7 @@ Logic:
 Example YAML structure:
 server:
   port: "${SERVER_PORT:8080}"
-  api_prefix: "/api"
+  api_prefix: "/restful"
   api_version: "v1"
 
 database:
@@ -35,7 +35,7 @@ database:
 ==> config Struct after unmarshalling:
 Server:
   Port: "8080"
-  ApiPrefix: "/api"
+  ApiPrefix: "/restful"
   ApiVersion: "v1"
 
 Database:
@@ -53,11 +53,25 @@ type Config struct {
 		ApiVersion string `mapstructure:"api_version"`
 	} `mapstructure:"server"`
 
+	JWT struct {
+		ExpectedIssuer    string   `mapstructure:"expected_issuer"`
+		ExpectedAudiences []string `mapstructure:"expected_audiences"`
+		AccessDuration    string   `mapstructure:"access_duration"`
+		RefreshDuration   string   `mapstructure:"refresh_duration"`
+		PrivateKeyPath    string   `mapstructure:"private_key_path"`
+		PublicKeyPath     string   `mapstructure:"public_key_path"`
+	} `mapstructure:"jwt"`
+
 	Cors struct {
-		AllowOrigins string `mapstructure:"allow_origins"`
-		AllowMethods string `mapstructure:"allow_methods"`
-		AllowHeaders string `mapstructure:"allow_headers"`
+		AllowOrigins     []string `mapstructure:"allow_origins"`
+		AllowMethods     []string `mapstructure:"allow_methods"`
+		AllowHeaders     []string `mapstructure:"allow_headers"`
+		AllowCredentials bool     `mapstructure:"allow_credentials"`
 	} `mapstructure:"cors"`
+
+	Swagger struct {
+		Host string `mapstructure:"host"`
+	} `mapstructure:"swagger"`
 
 	Database struct {
 		Host     string `mapstructure:"host"`

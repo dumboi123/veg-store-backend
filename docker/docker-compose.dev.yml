@@ -1,0 +1,50 @@
+services:
+  # --------- Postgres ---------
+#  postgres:
+#    image: postgres:${POSTGRES_DOCKER_TAG:-latest}
+#    container_name: postgres
+#    ports:
+#      - "5433:5432"
+#    networks:
+#      - my-network
+#    command: postgres -c 'max_connections=500'
+#    healthcheck:
+#      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d postgres" ]
+#      interval: 30s
+#      timeout: 10s
+#      start_period: 30s
+#      retries: 3
+#    restart: always # unless-stopped
+#    volumes:
+#      - ./postgres/init-db:/docker-entrypoint-initdb.d:ro
+#      - postgres-repository:/var/lib/postgresql/repository
+#    environment:
+#      POSTGRES_USER: ${POSTGRES_USER}
+#      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+  # --------- Application ---------
+  veg-store-backend:
+    image: benlun1201/veg-store-backend-builder
+    container_name: veg-store-backend
+    ports:
+      - "2345:8080" # HTTP - you can change port 2345 to any port that you like
+    networks:
+      - my-network
+    restart: always
+    volumes:
+      - ..:/app
+    environment:
+      SWAGGER_HOST: localhost:2345 # this port must same to expose port
+      CERT_SECRET: ${CERT_SECRET}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      GIN_MODE: ${GIN_MODE}
+      MODE: ${MODE}
+
+volumes:
+  postgres-data:
+    driver: local
+
+networks:
+  my-network:
+    driver: bridge

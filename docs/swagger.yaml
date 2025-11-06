@@ -1,5 +1,48 @@
 basePath: /
 definitions:
+  dto.HttpResponse-any:
+    properties:
+      code:
+        type: string
+      data: {}
+      http_status:
+        type: integer
+      message:
+        type: string
+    type: object
+  dto.HttpResponse-dto_Tokens:
+    properties:
+      code:
+        type: string
+      data:
+        $ref: '#/definitions/dto.Tokens'
+      http_status:
+        type: integer
+      message:
+        type: string
+    type: object
+  dto.HttpResponse-model_User:
+    properties:
+      code:
+        type: string
+      data:
+        $ref: '#/definitions/model.User'
+      http_status:
+        type: integer
+      message:
+        type: string
+    type: object
+  dto.HttpResponse-string:
+    properties:
+      code:
+        type: string
+      data:
+        type: string
+      http_status:
+        type: integer
+      message:
+        type: string
+    type: object
   dto.SignInRequest:
     properties:
       password:
@@ -19,20 +62,69 @@ definitions:
       refresh_token:
         type: string
     type: object
+  model.User:
+    properties:
+      age:
+        type: integer
+      name:
+        type: string
+      sex:
+        type: boolean
+    type: object
 host: localhost:8080
 info:
   contact:
-    email: support@example.com
-    name: API Support
+    email: benlun1201@gmail.com
+    name: Nhan Le
     url: http://example.com/support
-  description: This is a sample server that uses JWT authentication.
+  description: This is an API document for veg-store-backend.
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
   termsOfService: http://example.com/terms/
-  title: Example API
+  title: RESTFUL API VERSION 1.0
   version: "1.0"
 paths:
+  /user/details/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get details of a user by id
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.HttpResponse-model_User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.HttpResponse-any'
+      summary: User details
+      tags:
+      - users
+  /user/hello:
+    get:
+      consumes:
+      - application/json
+      description: Anh trai say gex
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.HttpResponse-string'
+      summary: Anh trai say hi
+      tags:
+      - users
   /user/sign-in:
     post:
       consumes:
@@ -51,16 +143,17 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.Tokens'
+            $ref: '#/definitions/dto.HttpResponse-dto_Tokens'
         "401":
           description: Unauthorized
           schema:
-            type: string
+            $ref: '#/definitions/dto.HttpResponse-string'
       summary: Sign in a user
       tags:
       - users
 schemes:
 - http
+- https
 securityDefinitions:
   BearerAuth:
     description: Type "Bearer" followed by a space and your JWT token.

@@ -3,19 +3,20 @@
 sudo chown -R $USER:$USER path/to/project
 sudo chmod +x *.sh
 
-docker rmi learn-go/go-clean-arch-builder
-docker build -f docker/Dockerfile.builder -t learn-go/go-clean-arch-builder .
+docker rmi benlun1201/veg-store-backend-builder
+docker build -f docker/Dockerfile.builder -t learn-go/veg-store-backend-builder .
 
-docker exec -it -uroot go-clean-arch bash
+docker exec -it -uroot veg-store-backend bash
 go run cmd/server/main.go
 air -c .air.toml
 
-docker exec -it -uroot go-clean-arch bash -c 'cd /app && air -c .air.toml'
-docker exec -it -uroot go-clean-arch bash -c 'cd /app && go run cmd/server/main.go'
+docker exec -it -uroot veg-store-backend bash -c 'cd /app && air -c .air.toml'
+docker exec -it -uroot veg-store-backend bash -c 'cd /app && go run cmd/server/main.go'
 
 # Bonus
-sudo ./start.sh
-sudo ./stop.sh
+sudo ./scripts/start.sh
+sudo ./scripts/restart.sh
+sudo ./scripts/stop.sh
 ```
 
 ```shell
@@ -36,12 +37,14 @@ goi18n merge i18n/active.en.toml i18n/translate.vi.toml
 go install github.com/swaggo/swag/cmd/swag@latest
 go get -u github.com/swaggo/gin-swagger
 go get -u github.com/swaggo/files
-swag init -g main.go --dir ./cmd/server,./internal/application/dto,./internal/api -o docs
+swag init -g main.go --parseDependency --parseInternal --dir ./cmd/server,./internal/application/dto,./internal/restful -o docs
 swag init -g ./cmd/server/main.go -o cmd/docs
+
+go install github.com/wadey/gocovmerge@latest
 
 go clean -modcache
 git config --global http.sslVerify false
-export GOINSECURE=github.com,go.googlesource.com,golang.org,go.uber.org,google.golang.org
+export GOINSECURE=github.com,go.googlesource.com,golang.org,go.uber.org,google.golang.org,sigs.k8s.io
 export GOSUMDB=off
 export GOPROXY=direct
 GODEBUG=x509ignoreCN=1 go env -w GOINSECURE=*.org

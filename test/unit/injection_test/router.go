@@ -1,19 +1,15 @@
 package injection_test
 
 import (
-	"veg-store-backend/injection"
-	"veg-store-backend/internal/api/rest"
+	"veg-store-backend/internal/infrastructure/router"
+	"veg-store-backend/internal/restful/handler"
 
 	"github.com/gin-gonic/gin"
 )
 
-func setupTestRouter() *injection.Router {
-	return InjectMock().Router
-}
-
-func MockUserRoutes(handler *rest.UserHandler) *gin.Engine {
-	router := setupTestRouter()
-	api := router.Engine.Group(router.ApiPath + "/user")
+func MockUserRoutes(handler *handler.UserHandler) *gin.Engine {
+	mockRouter := router.NewRouter()
+	api := mockRouter.Engine.Group(mockRouter.ApiPath + "/user")
 	{
 		api.GET("/hello", func(ginCtx *gin.Context) {
 			handler.Hello(MockHttpContext(ginCtx))
@@ -28,5 +24,5 @@ func MockUserRoutes(handler *rest.UserHandler) *gin.Engine {
 			handler.GetAllUsers(MockHttpContext(ginCtx))
 		})
 	}
-	return router.Engine
+	return mockRouter.Engine
 }

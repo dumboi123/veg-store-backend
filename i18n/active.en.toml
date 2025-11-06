@@ -1,12 +1,55 @@
+# ===========================================
+# English Language File
+# ===========================================
+
 # [key]
 # one = "Message for singular"
 # other = "Message for plural"
 # description = "Message description"
 [hello]
-other = "Hello {{.name}}"
+one = "Hello {{.name}}"
+other = "Hello everyone"
+
+# ===========================================
+# Not Found Errors
+# ===========================================
 
 [NotFound.User]
-other = "User not found"
+one = "User not found"
+other = "No users found"
 
-[user.created]
-other = "User created successfully"
+[NotFound.Product]
+one = "Product not found"
+other = "No products found"
+
+# ===========================================
+# Invalid Errors
+# ===========================================
+
+[Invalid.Token]
+one = "The provided token is invalid or expired"
+other = "One or more provided tokens are invalid or expired"
+
+[Invalid.Email]
+one = "The provided email address is invalid"
+other = "One or more provided email addresses are invalid"
+
+[Invalid.Username]
+one = "The provided username is invalid"
+other = "One or more provided usernames are invalid"
+
+# ===========================================
+# Authentication Errors
+# ===========================================
+
+[Auth.Unauthenticated]
+one = "You must be authenticated to access this resource"
+other = "One or more requests are unauthenticated"
+
+[Auth.WrongPassword]
+one = "Incorrect password. Please try again"
+other = "One or more accounts have incorrect passwords"
+
+[Auth.Forbidden]
+one = "You do not have permission to perform this action"
+other = "You do not have permission to perform these actions"

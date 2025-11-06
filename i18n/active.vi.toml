@@ -1,8 +1,35 @@
 [hello]
-other = "Xin chào {{.name}}"
+one = "Xin chào {{.name}}"
+other = "Xin chào tất cả mọi người"
 
 [NotFound.User]
-other = "Không Tìm thấy người dùng"
+one = "Không tìm thấy người dùng"
+other = "Không tìm thấy người dùng nào"
 
-[user.created]
-other = "User created successfully"
+[NotFound.Product]
+one = "Không tìm thấy sản phẩm"
+other = "Không tìm thấy sản phẩm nào"
+
+[Invalid.Token]
+one = "Token không hợp lệ"
+other = "Một hoặc nhiều token không hợp lệ"
+
+[Invalid.Email]
+one = "Email không hợp lệ"
+other = "Một hoặc nhiều email không hợp lệ"
+
+[Invalid.Username]
+one = "Tên người dùng không hợp lệ"
+other = "Một hoặc nhiều tên người dùng không hợp lệ"
+
+[Auth.Unauthenticated]
+one = "Chưa xác thực. Vui lòng đăng nhập để tiếp tục"
+other = "Một hoặc nhiều yêu cầu chưa được xác thực"
+
+[Auth.WrongPassword]
+one = "Sai mật khẩu. Vui lòng thử lại"
+other = "Một hoặc nhiều tài khoản có mật khẩu sai"
+
+[Auth.Forbidden]
+one = "Bạn không có quyền truy cập tài nguyên này"
+other = "Bạn không có quyền truy cập các tài nguyên này"

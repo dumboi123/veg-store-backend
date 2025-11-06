@@ -1,27 +1,98 @@
-## How to start application
+# 🚀 How to Start the Application
 
-# 1. Download & Setup all required packages
-- Go - version: 1.25.3
-- Docker (Builder, Engine)
+> ⚠️ **Notice:** Run all the following commands **from the project root directory**.
 
-# 2. Open terminal at root folder then run scripts (Must waiting for the first time)
-```shell
-sudo chown -R $USER:$USER .
-sudo chmod +x scripts/*.sh
-./scripts/start.sh
+## 1. 🧩 Prerequisites
+Ensure the following packages are installed:
+- **Go** ≥ 1.25.3
+- **Docker** (Builder, Engine)
+- **Git**
+- **make**
+
+---
+
+## 2. ▶️ Initial Setup
+```bash
+make prepare # Only run for the first time
+make start
+```
+> ⚠️ The first run may take a while — please wait until setup completes.
+
+---
+
+## 3. 🐳 Run Application in Docker
+
+### Run normally (no hot reload)
+```bash
+make run
 ```
 
-# 3. Run application in Docker container
-```shell
-docker exec -it -uroot go-clean-arch bash
+### Run with Hot Reload
+```bash
+make run-dev
+```
+> 💡 If hot reload doesn’t trigger after code changes, stop it using <kbd>Ctrl</kbd> + <kbd>C</kbd> and rerun the command.
 
-# If you just want to run without Hot reload
-go run cmd/server/main.go
+---
 
-# Or else, this way will help the app rebuild automatic when src code is updated
-# Sometimes it not work so you must stop it using <Ctrl> <c> then run it again
-air -c .air.toml
+## 4. ✅ Verify the Application
+Visit:  
+👉 [http://localhost:2345/api/v2/swagger-ui/index.html#](http://localhost:2345/api/v2/swagger-ui/index.html#)
+
+---
+
+## 5. 🛑 Stop Application
+To stop the containers, run:
+```bash
+make stop
 ```
 
-# 4. Test
-Go to http://localhost:2345/api/v1/user/hello to make sure the app is working.
+---
+
+# ⚙️ Update Environment Variables
+
+1. Update `scripts/helper/env_config.sh`
+2. Update `create_env_file()` in `scripts/helper/functions.sh`
+3. Update `environment` section of `veg-store-backend` service in `docker/docker-compose.dev.yml`
+
+After changes, restart the environment:
+```bash
+make restart
+```
+> 🧠 If you only changed `.env` values, updating (3) and restarting is enough.
+
+---
+
+# 📘 Update Swagger Schemas
+To regenerate Swagger documentation:
+```bash
+make swagger
+```
+> 🔄 Re-run the app if hot reload is not enabled.
+
+---
+
+# 🧪 Testing Guide
+
+## ▶️ Run All Unit Tests with Coverage
+To execute all unit tests and generate a detailed coverage report:
+```bash
+make coverage
+```
+> 📄 After running, open ./test/report/index.html in your browser to view the full coverage report.
+
+## 🎯 Run Tests in a Specific Package:
+Use the PKG argument to target a specific package:
+```bash
+# make test PKG=./test/unit/<package-you-want>
+# Example:
+make test PKG=./test/unit/handler/rest_test
+```
+
+## 🧩 Run a Single Test Function:
+Use the TEST argument to execute one specific test:
+```bash
+# make test-one TEST=<TestSuiteName>/<TestName>
+# Example:
+make test-one TEST=TestUserHandler/TestHello_success
+```

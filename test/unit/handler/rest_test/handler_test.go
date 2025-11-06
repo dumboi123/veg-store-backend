@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"veg-store-backend/injection/core"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -32,6 +33,10 @@ func NewHandlerTest[THandler any, TService any](
 		MockInstance: handler,
 		MockService:  service,
 	}
+}
+
+func AppURI(path string) string {
+	return core.Configs.Server.ApiPrefix + core.Configs.Server.ApiVersion + path
 }
 
 func (handler *HandlerTest[THandler, TService]) Get(t *testing.T, path string, headers ...map[string]string) *httptest.ResponseRecorder {

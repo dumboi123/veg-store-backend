@@ -3,6 +3,7 @@ package util
 import (
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,6 +24,24 @@ func GetTraceId(ginContext *gin.Context) string {
 		return v.(string)
 	}
 	return ""
+}
+
+// ParseDuration support “d” (day), “h”, “m”, “s”
+func ParseDuration(s string) (time.Duration, error) {
+	if len(s) == 0 {
+		return 0, nil
+	}
+
+	// If it has 'd' (day) then convert manually
+	if len(s) > 1 && s[len(s)-1] == 'd' {
+		daysString := s[:len(s)-1]
+		days, err := time.ParseDuration(daysString + "h") // trick: parse like hours
+		if err == nil {
+			return days * 24, nil
+		}
+	}
+
+	return time.ParseDuration(s)
 }
 
 func findGoModuleRoot() string {

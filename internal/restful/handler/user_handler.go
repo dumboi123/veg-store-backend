@@ -1,4 +1,4 @@
-package rest
+package handler
 
 import (
 	"net/http"
@@ -8,6 +8,7 @@ import (
 	"veg-store-backend/internal/domain/model"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/fx"
 )
 
 type UserHandler struct {
@@ -18,41 +19,33 @@ func NewUserHandler(userService service.UserService) *UserHandler {
 	return &UserHandler{service: userService}
 }
 
+// Hello godoc
+// @Summary Anh trai say hi
+// @Description Anh trai say gex
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} dto.HttpResponse[string]
+// @Router /user/hello [get]
 func (handler *UserHandler) Hello(context *core.HttpContext) {
 	context.JSON(http.StatusOK, gin.H{
 		"message": context.T(handler.service.Greeting(), map[string]interface{}{
-			"name": "Ben",
+			"name":  "Ben",
+			"count": 5,
 		}),
 	})
 }
 
-// SignIn godoc
-// @Summary Sign in a user
-// @Description Authenticate user and return a token
+// Details godoc
+// @Summary User details
+// @Description Get details of a user by id
 // @Tags users
-// @Accept  json
-// @Produce  json
-// @Param   user  body  dto.SignInRequest  true  "User credentials"
-// @Success 200 {object} dto.Tokens
-// @Failure 401 {object} string
-// @Router /user/sign-in [post]
-func (handler *UserHandler) SignIn(context *core.HttpContext) {
-	var request dto.SignInRequest
-
-	if err := context.Gin.ShouldBindJSON(&request); err != nil {
-		context.Gin.Error(core.Error.Auth.Unauthenticated)
-		return
-	}
-
-	context.JSON(http.StatusOK, dto.HttpResponse[dto.Tokens]{
-		HttpStatus: http.StatusOK,
-		Data: dto.Tokens{
-			AccessToken:  "mock_access_token",
-			RefreshToken: "mock_refresh_token",
-		},
-	})
-}
-
+// @Accept json
+// @Produce json
+// @Param id path string true "user id"
+// @Success 200 {object} dto.HttpResponse[model.User]
+// @Failure 400 {object} dto.HttpResponse[any]
+// @Router /user/details/{id} [get]
 func (handler *UserHandler) Details(context *core.HttpContext) {
 	id := context.Gin.Param("id")
 	user, err := handler.service.FindById(id)
@@ -75,3 +68,5 @@ func (handler *UserHandler) GetAllUsers(ctx *core.HttpContext) {
 		"users": []string{"Alice", "Bob", "Charlie"},
 	})
 }
+
+var UserHandlerModule = fx.Options(fx.Provide(NewUserHandler))

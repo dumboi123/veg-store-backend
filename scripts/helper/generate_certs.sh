@@ -152,6 +152,6 @@ EOF
 
 # ===== Example usage =====
 # export CERT_SECRET="yourpass"
-# generate_keystore_and_truststore "/path/to/certs" "example.com" "api.example.com" "admin.example.com"
+# generate_keystore_and_truststore "/path/to/certs" "example.com" "restful.example.com" "admin.example.com"
 
 

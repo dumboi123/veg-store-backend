@@ -11,9 +11,9 @@ const docTemplate = `{
         "title": "{{.Title}}",
         "termsOfService": "http://example.com/terms/",
         "contact": {
-            "name": "API Support",
+            "name": "Nhan Le",
             "url": "http://example.com/support",
-            "email": "support@example.com"
+            "email": "benlun1201@gmail.com"
         },
         "license": {
             "name": "MIT",
@@ -24,6 +24,67 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/user/details/{id}": {
+            "get": {
+                "description": "Get details of a user by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "User details",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "user id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.HttpResponse-model_User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.HttpResponse-any"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/hello": {
+            "get": {
+                "description": "Anh trai say gex",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Anh trai say hi",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.HttpResponse-string"
+                        }
+                    }
+                }
+            }
+        },
         "/user/sign-in": {
             "post": {
                 "description": "Authenticate user and return a token",
@@ -52,13 +113,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.Tokens"
+                            "$ref": "#/definitions/dto.HttpResponse-dto_Tokens"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/dto.HttpResponse-string"
                         }
                     }
                 }
@@ -66,6 +127,72 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dto.HttpResponse-any": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "repository": {},
+                "http_status": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.HttpResponse-dto_Tokens": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "repository": {
+                    "$ref": "#/definitions/dto.Tokens"
+                },
+                "http_status": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.HttpResponse-model_User": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "repository": {
+                    "$ref": "#/definitions/model.User"
+                },
+                "http_status": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.HttpResponse-string": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "repository": {
+                    "type": "string"
+                },
+                "http_status": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.SignInRequest": {
             "type": "object",
             "required": [
@@ -93,6 +220,20 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "model.User": {
+            "type": "object",
+            "properties": {
+                "age": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "sex": {
+                    "type": "boolean"
+                }
+            }
         }
     },
     "securityDefinitions": {
@@ -110,9 +251,9 @@ var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:8080",
 	BasePath:         "/",
-	Schemes:          []string{"http"},
-	Title:            "Example API",
-	Description:      "This is a sample server that uses JWT authentication.",
+	Schemes:          []string{"http", "https"},
+	Title:            "RESTFUL API VERSION 1.0",
+	Description:      "This is an API document for veg-store-backend.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
