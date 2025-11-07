@@ -67,13 +67,13 @@ func (localizer *Localizer) Localize(lang, msgID string, params ...map[string]in
 
 	// Get TemplateData if existed
 	var templateData map[string]interface{}
-	var pluralCount interface{}
+	pluralCount := 1
 
 	if len(params) > 0 {
 		templateData = params[0]
 
 		// Check if "count" key exists and is numeric
-		if val, ok := templateData["count"]; ok {
+		if val, ok := templateData["Count"]; ok {
 			switch v := val.(type) {
 			case int:
 				pluralCount = v
@@ -91,11 +91,7 @@ func (localizer *Localizer) Localize(lang, msgID string, params ...map[string]in
 	config := &i18n.LocalizeConfig{
 		MessageID:    msgID,
 		TemplateData: templateData,
-	}
-
-	// If pluralCount > 1, set PluralCount to trigger plural form
-	if count, ok := pluralCount.(int); ok && count > 1 {
-		config.PluralCount = count
+		PluralCount:  pluralCount,
 	}
 
 	// Localize message
@@ -147,7 +143,8 @@ func loadI18nMessages(bundle *i18n.Bundle, absPath string) {
 				zap.Int("message_count", len(mf.Messages)),
 			)
 			for _, msg := range mf.Messages {
-				fields = append(fields, zap.String(fmt.Sprintf("%s.%s", locale, msg.ID), msg.Other))
+				fields = append(fields, zap.String(fmt.Sprintf("%s.%s.one", locale, msg.ID), msg.One))
+				fields = append(fields, zap.String(fmt.Sprintf("%s.%s.other", locale, msg.ID), msg.Other))
 			}
 		}
 

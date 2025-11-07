@@ -40,7 +40,9 @@ go get -u github.com/swaggo/files
 swag init -g main.go --parseDependency --parseInternal --dir ./cmd/server,./internal/application/dto,./internal/restful -o docs
 swag init -g ./cmd/server/main.go -o cmd/docs
 
-go install github.com/wadey/gocovmerge@latest
+go install -v github.com/go-delve/delve/cmd/dlv@latest
+dlv debug --headless --listen=:40000 --api-version=2 --accept-multiclient --continue ./cmd/server
+dlv exec ./app --headless --listen=:40000 --api-version=2 --accept-multiclient --continue
 
 go clean -modcache
 git config --global http.sslVerify false

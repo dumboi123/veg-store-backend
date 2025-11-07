@@ -5,6 +5,7 @@ TEST_FLAGS=-v -cover -count=1
 PKG=./... # All sub packages in root
 PKG_INTERNAL=./internal/...
 PKG_TEST=./test/unit/...
+DEBUG_PORT=2346
 
 .PHONY: test test-coverage test-one lint tidy
 
@@ -53,6 +54,7 @@ tidy:
 prepare:
 	@echo "Preparing external packages..."
 	@go install -v github.com/air-verse/air@latest
+	@go install -v github.com/go-delve/delve/cmd/dlv@latest
 	@go install -v github.com/nicksnyder/go-i18n/v2/goi18n@latest
 	@go install -v github.com/swaggo/swag/cmd/swag@latest
 	@#go install -v github.com/golangci/golangci-lint/cmd/golangci-lint@latest
@@ -75,6 +77,11 @@ stop:
 run:
 	@echo "Running..."
 	@docker exec -it -uroot veg-store-backend bash -c 'cd /app && go run cmd/server/main.go'
+
+debug:
+	@echo "Running in debug mode..."
+	@#docker exec -it -uroot veg-store-backend bash -c 'cd /app && dlv exec --listen=:2345 --headless=true --api-version=2 --accept-multiclient --continue ./bin/veg-store-backend'
+	@docker exec -it -uroot veg-store-backend bash -c 'cd /app && dlv debug --build-flags="-buildvcs=false" --listen=:$(DEBUG_PORT) --headless --api-version=2 --accept-multiclient --continue ./cmd/server'
 
 run-dev:
 	@echo "Running with Hot reload..."

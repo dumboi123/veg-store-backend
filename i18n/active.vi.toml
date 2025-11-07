@@ -1,6 +1,6 @@
 [hello]
 one = "Xin chào {{.name}}"
-other = "Xin chào tất cả mọi người"
+other = "Xin chào {{.Count}} bạn"
 
 [NotFound.User]
 one = "Không tìm thấy người dùng"

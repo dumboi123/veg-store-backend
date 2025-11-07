@@ -28,6 +28,7 @@ services:
     container_name: veg-store-backend
     ports:
       - "2345:8080" # HTTP - you can change port 2345 to any port that you like
+      - "2346:8081" # DEBUG PORT - you can change port 2346 to any port that you like
     networks:
       - my-network
     restart: always

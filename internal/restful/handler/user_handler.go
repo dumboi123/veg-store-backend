@@ -31,7 +31,7 @@ func (handler *UserHandler) Hello(context *core.HttpContext) {
 	context.JSON(http.StatusOK, gin.H{
 		"message": context.T(handler.service.Greeting(), map[string]interface{}{
 			"name":  "Ben",
-			"count": 5,
+			"Count": 1,
 		}),
 	})
 }
